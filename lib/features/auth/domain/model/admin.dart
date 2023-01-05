@@ -1,8 +1,8 @@
 class Admin {
-  final int? id;
-  final String? nama;
-  final String? email;
-  final String? password;
+  final int id;
+  final String nama;
+  final String email;
+  final String password;
 
   Admin({
     required this.id,

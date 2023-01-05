@@ -8,6 +8,7 @@ import 'package:my_cashier/data/local/cashier_database.dart';
 import 'package:my_cashier/features/auth/domain/model/admin.dart';
 import 'package:my_cashier/features/auth/domain/repository/i_auth_repository.dart';
 import 'package:my_cashier/util/helper/secure_storage_helper.dart';
+import 'package:my_cashier/util/extension/entity_extension.dart';
 
 class AuthRepository implements IAuthRepository {
   final CashierDatabase database;
@@ -17,12 +18,12 @@ class AuthRepository implements IAuthRepository {
   @override
   Future<Option<Admin>> checkAuthenticated() async {
     final savedCredential =
-        await SecureStorageHelper.instance.getUserCredential() ?? "";
+        await SecureStorageHelper.instance.getUserCredential();
 
     Logger().i("Saved Credential: $savedCredential");
 
     final admin = await (database.select(database.admins)
-          ..where((tbl) => tbl.email.equals(savedCredential)))
+          ..where((tbl) => tbl.email.equals(savedCredential?['email'] ?? "")))
         .getSingleOrNull();
 
     return optionOf(admin?.toModel());
@@ -37,7 +38,10 @@ class AuthRepository implements IAuthRepository {
           .getSingleOrNull();
 
       if (existedAdmin != null) {
-        SecureStorageHelper.instance.saveUserCredential(email);
+        SecureStorageHelper.instance.saveUserCredential(
+          id: existedAdmin.id,
+          email: existedAdmin.email,
+        );
 
         return right(unit);
       } else {
@@ -67,7 +71,14 @@ class AuthRepository implements IAuthRepository {
 
         await database.into(database.admins).insert(data);
 
-        SecureStorageHelper.instance.saveUserCredential(email);
+        final admin = await (database.select(database.admins)
+              ..where((tbl) => tbl.email.equals(email)))
+            .getSingleOrNull();
+
+        SecureStorageHelper.instance.saveUserCredential(
+          id: admin?.id ?? 0,
+          email: admin?.email ?? "",
+        );
 
         return right(unit);
       } else {

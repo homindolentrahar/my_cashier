@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:my_cashier/features/auth/presentation/application/login_controller.dart';
 import 'package:my_cashier/presentation/widget/app_text_field.dart';
 import 'package:my_cashier/route/route_name.dart';
@@ -65,8 +65,8 @@ class LoginScreen extends StatelessWidget {
                           child: Icon(
                             color: Colors.grey,
                             controller.isObscure
-                                ? Iconsax.eye
-                                : Iconsax.eye_slash,
+                                ? LineIcons.eye
+                                : LineIcons.eyeSlash,
                           ),
                         ),
                       ),

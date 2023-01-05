@@ -13,6 +13,10 @@ class EasyDialogHelper {
     );
   }
 
+  static void showSuccess(String message) {
+    EasyLoading.showSuccess(message);
+  }
+
   static void showError(String error) {
     EasyLoading.showError(error);
   }
