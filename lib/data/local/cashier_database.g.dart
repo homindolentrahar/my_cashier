@@ -277,7 +277,10 @@ class $MenusTable extends Menus with TableInfo<$MenusTable, MenuEntity> {
   @override
   late final GeneratedColumn<int> idAdmin = GeneratedColumn<int>(
       'id_admin', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES admins (id)'));
   static const VerificationMeta _namaMeta = const VerificationMeta('nama');
   @override
   late final GeneratedColumn<String> nama =
@@ -585,13 +588,487 @@ class MenusCompanion extends UpdateCompanion<MenuEntity> {
   }
 }
 
+class $TransactionsTable extends Transactions
+    with TableInfo<$TransactionsTable, TransactionEntity> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TransactionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _idAdminMeta =
+      const VerificationMeta('idAdmin');
+  @override
+  late final GeneratedColumn<int> idAdmin = GeneratedColumn<int>(
+      'id_admin', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES admins (id)'));
+  static const VerificationMeta _tanggalMeta =
+      const VerificationMeta('tanggal');
+  @override
+  late final GeneratedColumn<DateTime> tanggal = GeneratedColumn<DateTime>(
+      'tanggal', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: Constant(DateTime.now()));
+  @override
+  List<GeneratedColumn> get $columns => [id, idAdmin, tanggal];
+  @override
+  String get aliasedName => _alias ?? 'transactions';
+  @override
+  String get actualTableName => 'transactions';
+  @override
+  VerificationContext validateIntegrity(Insertable<TransactionEntity> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('id_admin')) {
+      context.handle(_idAdminMeta,
+          idAdmin.isAcceptableOrUnknown(data['id_admin']!, _idAdminMeta));
+    } else if (isInserting) {
+      context.missing(_idAdminMeta);
+    }
+    if (data.containsKey('tanggal')) {
+      context.handle(_tanggalMeta,
+          tanggal.isAcceptableOrUnknown(data['tanggal']!, _tanggalMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  TransactionEntity map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TransactionEntity(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      idAdmin: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id_admin'])!,
+      tanggal: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}tanggal'])!,
+    );
+  }
+
+  @override
+  $TransactionsTable createAlias(String alias) {
+    return $TransactionsTable(attachedDatabase, alias);
+  }
+}
+
+class TransactionEntity extends DataClass
+    implements Insertable<TransactionEntity> {
+  final int id;
+  final int idAdmin;
+  final DateTime tanggal;
+  const TransactionEntity(
+      {required this.id, required this.idAdmin, required this.tanggal});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['id_admin'] = Variable<int>(idAdmin);
+    map['tanggal'] = Variable<DateTime>(tanggal);
+    return map;
+  }
+
+  TransactionsCompanion toCompanion(bool nullToAbsent) {
+    return TransactionsCompanion(
+      id: Value(id),
+      idAdmin: Value(idAdmin),
+      tanggal: Value(tanggal),
+    );
+  }
+
+  factory TransactionEntity.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TransactionEntity(
+      id: serializer.fromJson<int>(json['id']),
+      idAdmin: serializer.fromJson<int>(json['idAdmin']),
+      tanggal: serializer.fromJson<DateTime>(json['tanggal']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'idAdmin': serializer.toJson<int>(idAdmin),
+      'tanggal': serializer.toJson<DateTime>(tanggal),
+    };
+  }
+
+  TransactionEntity copyWith({int? id, int? idAdmin, DateTime? tanggal}) =>
+      TransactionEntity(
+        id: id ?? this.id,
+        idAdmin: idAdmin ?? this.idAdmin,
+        tanggal: tanggal ?? this.tanggal,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('TransactionEntity(')
+          ..write('id: $id, ')
+          ..write('idAdmin: $idAdmin, ')
+          ..write('tanggal: $tanggal')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, idAdmin, tanggal);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TransactionEntity &&
+          other.id == this.id &&
+          other.idAdmin == this.idAdmin &&
+          other.tanggal == this.tanggal);
+}
+
+class TransactionsCompanion extends UpdateCompanion<TransactionEntity> {
+  final Value<int> id;
+  final Value<int> idAdmin;
+  final Value<DateTime> tanggal;
+  const TransactionsCompanion({
+    this.id = const Value.absent(),
+    this.idAdmin = const Value.absent(),
+    this.tanggal = const Value.absent(),
+  });
+  TransactionsCompanion.insert({
+    this.id = const Value.absent(),
+    required int idAdmin,
+    this.tanggal = const Value.absent(),
+  }) : idAdmin = Value(idAdmin);
+  static Insertable<TransactionEntity> custom({
+    Expression<int>? id,
+    Expression<int>? idAdmin,
+    Expression<DateTime>? tanggal,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (idAdmin != null) 'id_admin': idAdmin,
+      if (tanggal != null) 'tanggal': tanggal,
+    });
+  }
+
+  TransactionsCompanion copyWith(
+      {Value<int>? id, Value<int>? idAdmin, Value<DateTime>? tanggal}) {
+    return TransactionsCompanion(
+      id: id ?? this.id,
+      idAdmin: idAdmin ?? this.idAdmin,
+      tanggal: tanggal ?? this.tanggal,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (idAdmin.present) {
+      map['id_admin'] = Variable<int>(idAdmin.value);
+    }
+    if (tanggal.present) {
+      map['tanggal'] = Variable<DateTime>(tanggal.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TransactionsCompanion(')
+          ..write('id: $id, ')
+          ..write('idAdmin: $idAdmin, ')
+          ..write('tanggal: $tanggal')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $TransactionItemsTable extends TransactionItems
+    with TableInfo<$TransactionItemsTable, TransactionItemEntity> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TransactionItemsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idTransaksiMeta =
+      const VerificationMeta('idTransaksi');
+  @override
+  late final GeneratedColumn<int> idTransaksi = GeneratedColumn<int>(
+      'id_transaksi', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES transactions (id)'));
+  static const VerificationMeta _idMenuMeta = const VerificationMeta('idMenu');
+  @override
+  late final GeneratedColumn<int> idMenu = GeneratedColumn<int>(
+      'id_menu', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES menus (id)'));
+  static const VerificationMeta _quantityMeta =
+      const VerificationMeta('quantity');
+  @override
+  late final GeneratedColumn<int> quantity = GeneratedColumn<int>(
+      'quantity', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _subtotalMeta =
+      const VerificationMeta('subtotal');
+  @override
+  late final GeneratedColumn<double> subtotal = GeneratedColumn<double>(
+      'subtotal', aliasedName, false,
+      type: DriftSqlType.double, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [idTransaksi, idMenu, quantity, subtotal];
+  @override
+  String get aliasedName => _alias ?? 'transaction_items';
+  @override
+  String get actualTableName => 'transaction_items';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<TransactionItemEntity> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id_transaksi')) {
+      context.handle(
+          _idTransaksiMeta,
+          idTransaksi.isAcceptableOrUnknown(
+              data['id_transaksi']!, _idTransaksiMeta));
+    } else if (isInserting) {
+      context.missing(_idTransaksiMeta);
+    }
+    if (data.containsKey('id_menu')) {
+      context.handle(_idMenuMeta,
+          idMenu.isAcceptableOrUnknown(data['id_menu']!, _idMenuMeta));
+    } else if (isInserting) {
+      context.missing(_idMenuMeta);
+    }
+    if (data.containsKey('quantity')) {
+      context.handle(_quantityMeta,
+          quantity.isAcceptableOrUnknown(data['quantity']!, _quantityMeta));
+    } else if (isInserting) {
+      context.missing(_quantityMeta);
+    }
+    if (data.containsKey('subtotal')) {
+      context.handle(_subtotalMeta,
+          subtotal.isAcceptableOrUnknown(data['subtotal']!, _subtotalMeta));
+    } else if (isInserting) {
+      context.missing(_subtotalMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => const {};
+  @override
+  TransactionItemEntity map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TransactionItemEntity(
+      idTransaksi: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id_transaksi'])!,
+      idMenu: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id_menu'])!,
+      quantity: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}quantity'])!,
+      subtotal: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}subtotal'])!,
+    );
+  }
+
+  @override
+  $TransactionItemsTable createAlias(String alias) {
+    return $TransactionItemsTable(attachedDatabase, alias);
+  }
+}
+
+class TransactionItemEntity extends DataClass
+    implements Insertable<TransactionItemEntity> {
+  final int idTransaksi;
+  final int idMenu;
+  final int quantity;
+  final double subtotal;
+  const TransactionItemEntity(
+      {required this.idTransaksi,
+      required this.idMenu,
+      required this.quantity,
+      required this.subtotal});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id_transaksi'] = Variable<int>(idTransaksi);
+    map['id_menu'] = Variable<int>(idMenu);
+    map['quantity'] = Variable<int>(quantity);
+    map['subtotal'] = Variable<double>(subtotal);
+    return map;
+  }
+
+  TransactionItemsCompanion toCompanion(bool nullToAbsent) {
+    return TransactionItemsCompanion(
+      idTransaksi: Value(idTransaksi),
+      idMenu: Value(idMenu),
+      quantity: Value(quantity),
+      subtotal: Value(subtotal),
+    );
+  }
+
+  factory TransactionItemEntity.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TransactionItemEntity(
+      idTransaksi: serializer.fromJson<int>(json['idTransaksi']),
+      idMenu: serializer.fromJson<int>(json['idMenu']),
+      quantity: serializer.fromJson<int>(json['quantity']),
+      subtotal: serializer.fromJson<double>(json['subtotal']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'idTransaksi': serializer.toJson<int>(idTransaksi),
+      'idMenu': serializer.toJson<int>(idMenu),
+      'quantity': serializer.toJson<int>(quantity),
+      'subtotal': serializer.toJson<double>(subtotal),
+    };
+  }
+
+  TransactionItemEntity copyWith(
+          {int? idTransaksi, int? idMenu, int? quantity, double? subtotal}) =>
+      TransactionItemEntity(
+        idTransaksi: idTransaksi ?? this.idTransaksi,
+        idMenu: idMenu ?? this.idMenu,
+        quantity: quantity ?? this.quantity,
+        subtotal: subtotal ?? this.subtotal,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('TransactionItemEntity(')
+          ..write('idTransaksi: $idTransaksi, ')
+          ..write('idMenu: $idMenu, ')
+          ..write('quantity: $quantity, ')
+          ..write('subtotal: $subtotal')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(idTransaksi, idMenu, quantity, subtotal);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TransactionItemEntity &&
+          other.idTransaksi == this.idTransaksi &&
+          other.idMenu == this.idMenu &&
+          other.quantity == this.quantity &&
+          other.subtotal == this.subtotal);
+}
+
+class TransactionItemsCompanion extends UpdateCompanion<TransactionItemEntity> {
+  final Value<int> idTransaksi;
+  final Value<int> idMenu;
+  final Value<int> quantity;
+  final Value<double> subtotal;
+  const TransactionItemsCompanion({
+    this.idTransaksi = const Value.absent(),
+    this.idMenu = const Value.absent(),
+    this.quantity = const Value.absent(),
+    this.subtotal = const Value.absent(),
+  });
+  TransactionItemsCompanion.insert({
+    required int idTransaksi,
+    required int idMenu,
+    required int quantity,
+    required double subtotal,
+  })  : idTransaksi = Value(idTransaksi),
+        idMenu = Value(idMenu),
+        quantity = Value(quantity),
+        subtotal = Value(subtotal);
+  static Insertable<TransactionItemEntity> custom({
+    Expression<int>? idTransaksi,
+    Expression<int>? idMenu,
+    Expression<int>? quantity,
+    Expression<double>? subtotal,
+  }) {
+    return RawValuesInsertable({
+      if (idTransaksi != null) 'id_transaksi': idTransaksi,
+      if (idMenu != null) 'id_menu': idMenu,
+      if (quantity != null) 'quantity': quantity,
+      if (subtotal != null) 'subtotal': subtotal,
+    });
+  }
+
+  TransactionItemsCompanion copyWith(
+      {Value<int>? idTransaksi,
+      Value<int>? idMenu,
+      Value<int>? quantity,
+      Value<double>? subtotal}) {
+    return TransactionItemsCompanion(
+      idTransaksi: idTransaksi ?? this.idTransaksi,
+      idMenu: idMenu ?? this.idMenu,
+      quantity: quantity ?? this.quantity,
+      subtotal: subtotal ?? this.subtotal,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (idTransaksi.present) {
+      map['id_transaksi'] = Variable<int>(idTransaksi.value);
+    }
+    if (idMenu.present) {
+      map['id_menu'] = Variable<int>(idMenu.value);
+    }
+    if (quantity.present) {
+      map['quantity'] = Variable<int>(quantity.value);
+    }
+    if (subtotal.present) {
+      map['subtotal'] = Variable<double>(subtotal.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TransactionItemsCompanion(')
+          ..write('idTransaksi: $idTransaksi, ')
+          ..write('idMenu: $idMenu, ')
+          ..write('quantity: $quantity, ')
+          ..write('subtotal: $subtotal')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$CashierDatabase extends GeneratedDatabase {
   _$CashierDatabase(QueryExecutor e) : super(e);
   late final $AdminsTable admins = $AdminsTable(this);
   late final $MenusTable menus = $MenusTable(this);
+  late final $TransactionsTable transactions = $TransactionsTable(this);
+  late final $TransactionItemsTable transactionItems =
+      $TransactionItemsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [admins, menus];
+  List<DatabaseSchemaEntity> get allSchemaEntities =>
+      [admins, menus, transactions, transactionItems];
 }

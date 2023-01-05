@@ -42,7 +42,9 @@ class MainScreen extends StatelessWidget {
           child: const Icon(
             LineIcons.wavyMoneyBill,
           ),
-          onPressed: () {},
+          onPressed: () {
+            Get.toNamed(RouteName.transaksiRoute);
+          },
         ),
         body: SafeArea(
           child: Column(

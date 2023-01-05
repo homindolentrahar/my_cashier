@@ -75,7 +75,14 @@ class MenuRepository implements IMenuRepository {
 
   @override
   Stream<Either<String, List<Menu>>> watchAllMenus() async* {
-    yield* database.select(database.menus).watch().map((data) {
+    final savedCredential =
+        await SecureStorageHelper.instance.getUserCredential();
+    yield* (database.select(database.menus)
+          ..where(
+            (tbl) => tbl.idAdmin.equals(savedCredential?['id'] ?? 0),
+          ))
+        .watch()
+        .map((data) {
       return right<String, List<Menu>>(
         data.map((e) => e.toModel()).toList(),
       );

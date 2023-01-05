@@ -9,6 +9,8 @@ import 'package:my_cashier/features/menu/presentation/binding/detail_crud_menu_b
 import 'package:my_cashier/features/menu/presentation/screen/detail_crud_menu_screen.dart';
 import 'package:my_cashier/features/menu/presentation/screen/menu_screen.dart';
 import 'package:my_cashier/features/riwayat/presentation/screen/riwayat_screen.dart';
+import 'package:my_cashier/features/transaksi/presentation/binding/transaksi_binding.dart';
+import 'package:my_cashier/features/transaksi/presentation/screen/transaksi_screen.dart';
 import 'package:my_cashier/presentation/screen/splash_screen.dart';
 import 'package:my_cashier/route/route_name.dart';
 
@@ -44,6 +46,12 @@ class RoutePage {
           transition: Transition.fadeIn,
         ),
       ],
+    ),
+    GetPage(
+      name: RouteName.transaksiRoute,
+      page: () => const TransaksiScreen(),
+      binding: TransaksiBinding(),
+      transition: Transition.downToUp,
     ),
     // Detail
     GetPage(

@@ -1,6 +1,7 @@
 import 'package:my_cashier/data/local/cashier_database.dart';
 import 'package:my_cashier/features/auth/domain/model/admin.dart';
 import 'package:my_cashier/features/menu/domain/model/menu.dart';
+import 'package:my_cashier/features/transaksi/domain/model/transaksi.dart';
 
 extension AdminsExt on AdminEntity {
   Admin toModel() => Admin(
@@ -19,5 +20,13 @@ extension MenusExt on MenuEntity {
         description: description,
         harga: harga,
         stock: stock,
+      );
+}
+
+extension TransactionsExt on TransactionEntity {
+  Transaksi toModel() => Transaksi(
+        idTransaksi: id,
+        idAdmin: idAdmin,
+        tanggal: tanggal,
       );
 }
