@@ -1,9 +1,16 @@
 import 'dart:io';
 
+import 'package:dartz/dartz.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
+import 'package:logger/logger.dart';
+import 'package:my_cashier/features/transaksi/domain/model/transaksi_item.dart';
+import 'package:my_cashier/model/transaksi_with_menu.dart';
+import 'package:my_cashier/util/extension/entity_extension.dart';
+import 'package:my_cashier/util/helper/secure_storage_helper.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
+import 'package:rxdart/rxdart.dart';
 
 part 'cashier_database.g.dart';
 
@@ -13,6 +20,58 @@ class CashierDatabase extends _$CashierDatabase {
 
   @override
   int get schemaVersion => 1;
+
+  Stream<Either<String, List<TransaksiWithDetails>>>
+      watchAllTransactions() async* {
+    final savedCredential =
+        await SecureStorageHelper.instance.getUserCredential();
+
+    final transactionQuery = select(transactions)
+      ..where((tbl) => tbl.idAdmin.equals(savedCredential?['id'] ?? 0));
+
+    yield* transactionQuery.watch().switchMap((txs) {
+      final idToTransaction = {for (final tx in txs) tx.id: tx};
+      final ids = idToTransaction.keys;
+
+      final joinQuery = select(transactionItems).join([
+        innerJoin(transactions,
+            transactions.id.equalsExp(transactionItems.idTransaksi)),
+        innerJoin(menus, menus.id.equalsExp(transactionItems.idMenu)),
+      ])
+        ..where(transactionItems.idTransaksi.isIn(ids));
+
+      return joinQuery.watch().map((rows) {
+        final idToItems = <int, List<DetailTransaksi>>{};
+
+        Logger().w(rows.map((e) => e.rawData.data).toList());
+
+        for (final row in rows) {
+          final item = DetailTransaksi(
+            menu: row.readTable(menus).toModel(),
+            quantity: row.readTable(transactionItems).quantity,
+            subtotal: row.readTable(transactionItems).subtotal,
+          );
+          final id = row.readTable(transactionItems).idTransaksi;
+
+          idToItems.putIfAbsent(id, () => []).add(item);
+        }
+
+        return right<String, List<TransaksiWithDetails>>(
+          ids
+              .map(
+                (id) => TransaksiWithDetails(
+                  transaksi: idToTransaction[id]?.toModel(),
+                  details: idToItems[id],
+                ),
+              )
+              .toList(),
+        );
+      });
+    }).onErrorReturnWith((error, stackTrace) {
+      Logger().e("Error: ${error.toString()}");
+      return left(error.toString());
+    });
+  }
 }
 
 @DataClassName('AdminEntity')

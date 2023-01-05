@@ -12,6 +12,7 @@ class MyCashierApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       getPages: RoutePage.pages,
       initialRoute: RouteName.initialRoute,
       initialBinding: AppBinding(),

@@ -59,27 +59,42 @@ class TransaksiConfirmSheet extends StatelessWidget {
             },
             separatorBuilder: (ctx, index) => const SizedBox(height: 8),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 12),
+          const Divider(
+            indent: 16,
+            endIndent: 16,
+            color: Colors.grey,
+            thickness: 0.5,
+          ),
+          const SizedBox(height: 12),
           Row(
             children: [
               Expanded(
                 child: Text(
                   "Total",
-                  style: Get.textTheme.headline6?.copyWith(color: Colors.black),
+                  style: Get.textTheme.headline6?.copyWith(
+                    color: Colors.black,
+                    fontSize: 20,
+                  ),
                 ),
               ),
               const SizedBox(width: 16),
               Text(
                 "${details.fold(0, (previousValue, element) => previousValue += element.quantity ?? 0)} pcs",
-                style: Get.textTheme.headline6?.copyWith(color: Colors.grey),
+                style: Get.textTheme.headline6?.copyWith(
+                  color: Colors.grey,
+                  fontSize: 20,
+                ),
               ),
               const SizedBox(width: 16),
               Expanded(
                 child: Text(
                   "${details.fold(0.0, (previousValue, element) => previousValue += element.subtotal ?? 0.0)}",
                   textAlign: TextAlign.end,
-                  style: Get.textTheme.headline6
-                      ?.copyWith(color: Get.theme.primaryColor),
+                  style: Get.textTheme.headline6?.copyWith(
+                    color: Get.theme.primaryColor,
+                    fontSize: 20,
+                  ),
                 ),
               ),
             ],

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_cashier/features/riwayat/presentation/application/riwayat_controller.dart';
 import 'package:my_cashier/features/riwayat/presentation/widget/riwayat_list_item.dart';
-import 'package:my_cashier/features/transaksi/domain/model/transaksi.dart';
+import 'package:my_cashier/model/transaksi_with_menu.dart';
 
 class RiwayatScreen extends StatelessWidget {
   const RiwayatScreen({super.key});
@@ -27,9 +27,9 @@ class RiwayatScreen extends StatelessWidget {
             child: ListView.separated(
               physics: const BouncingScrollPhysics(),
               itemCount: controller.transactions?.length ?? 0,
-              separatorBuilder: (ctx, index) => const SizedBox(height: 16),
+              separatorBuilder: (ctx, index) => const SizedBox(height: 24),
               itemBuilder: (ctx, index) => RiwayatListItem(
-                data: controller.transactions?[index] ?? Transaksi(),
+                data: controller.transactions?[index] ?? TransaksiWithDetails(),
               ),
             ),
           ),

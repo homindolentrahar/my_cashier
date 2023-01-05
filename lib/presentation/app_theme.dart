@@ -27,9 +27,11 @@ class AppTheme {
       ),
       bodyText1: TextStyle(
         fontSize: 14,
+        fontWeight: FontWeight.normal,
       ),
       bodyText2: TextStyle(
         fontSize: 12,
+        fontWeight: FontWeight.normal,
       ),
     ),
   );
