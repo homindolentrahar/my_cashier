@@ -54,10 +54,6 @@ class LoginScreen extends StatelessWidget {
                           FormBuilderValidators.required(),
                           FormBuilderValidators.minLength(8),
                         ]),
-                        style: Get.textTheme.bodyText1?.copyWith(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w500,
-                        ),
                         suffix: GestureDetector(
                           onTap: () {
                             controller.togglePasswordVisibility();

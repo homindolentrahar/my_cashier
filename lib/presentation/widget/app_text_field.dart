@@ -45,7 +45,7 @@ class AppTextField extends StatelessWidget {
       style: style ??
           Get.textTheme.bodyText1?.copyWith(
             color: Colors.black,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.normal,
           ),
       decoration: InputDecoration(
         hintText: hint,

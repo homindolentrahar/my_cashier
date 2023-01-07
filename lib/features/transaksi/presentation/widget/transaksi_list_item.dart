@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_cashier/features/menu/domain/model/menu.dart';
 import 'package:my_cashier/features/transaksi/domain/model/transaksi_item_with_transaksi_menu.dart';
+import 'package:my_cashier/util/extension/number_extensions.dart';
 
 class TransaksiListItem extends StatelessWidget {
   const TransaksiListItem({
@@ -102,7 +103,7 @@ class TransaksiListItem extends StatelessWidget {
                   ),
                   const SizedBox(width: 16),
                   Text(
-                    menu.harga.toString(),
+                    menu.harga?.toCurrency() ?? "-",
                     style: Get.textTheme.headline6?.copyWith(
                         color: isSelected ? Colors.white : Colors.black),
                   ),
@@ -132,7 +133,7 @@ class TransaksiListItem extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  order?.subtotal?.toString() ?? "",
+                  order?.subtotal?.toCurrency() ?? "",
                   style: Get.textTheme.headline6?.copyWith(
                     color: Get.theme.primaryColor,
                   ),

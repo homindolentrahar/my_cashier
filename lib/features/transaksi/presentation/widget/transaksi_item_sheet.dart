@@ -4,8 +4,8 @@ import 'package:line_icons/line_icons.dart';
 import 'package:my_cashier/features/menu/domain/model/menu.dart';
 import 'package:my_cashier/features/transaksi/domain/model/transaksi_item_with_transaksi_menu.dart';
 import 'package:my_cashier/features/transaksi/presentation/application/transaksi_item_controller.dart';
-
-import '../../../../presentation/widget/app_fill_button.dart';
+import 'package:my_cashier/presentation/widget/app_fill_button.dart';
+import 'package:my_cashier/util/extension/number_extensions.dart';
 
 class TransaksiItemSheet extends StatelessWidget {
   const TransaksiItemSheet({
@@ -69,7 +69,7 @@ class TransaksiItemSheet extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      menu?.harga.toString() ?? "",
+                      menu?.harga?.toCurrency() ?? "-",
                       style: Get.textTheme.headline6
                           ?.copyWith(color: Colors.black),
                     ),
@@ -124,7 +124,7 @@ class TransaksiItemSheet extends StatelessWidget {
                               text: "Subtotal: ",
                             ),
                             TextSpan(
-                              text: controller.subtotal.toString(),
+                              text: controller.subtotal.toCurrency(),
                               style: Get.textTheme.headline4?.copyWith(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w600,

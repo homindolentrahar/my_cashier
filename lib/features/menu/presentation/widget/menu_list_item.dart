@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_cashier/features/menu/domain/model/menu.dart';
+import 'package:my_cashier/util/extension/number_extensions.dart';
 
 class MenuListItem extends StatelessWidget {
   const MenuListItem({super.key, required this.data, required this.onTap});
@@ -68,7 +69,7 @@ class MenuListItem extends StatelessWidget {
             ),
             const SizedBox(width: 16),
             Text(
-              data.harga.toString(),
+              data.harga?.toCurrency() ?? "-",
               style: Get.textTheme.headline6?.copyWith(color: Colors.black),
             ),
           ],

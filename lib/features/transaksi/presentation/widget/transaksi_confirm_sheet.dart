@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_cashier/features/transaksi/domain/model/transaksi_item_with_transaksi_menu.dart';
 import 'package:my_cashier/presentation/widget/app_fill_button.dart';
+import 'package:my_cashier/util/extension/number_extensions.dart';
 
 class TransaksiConfirmSheet extends StatelessWidget {
   const TransaksiConfirmSheet(
@@ -48,7 +49,7 @@ class TransaksiConfirmSheet extends StatelessWidget {
                   const SizedBox(width: 16),
                   Expanded(
                     child: Text(
-                      detail.subtotal?.toString() ?? "-",
+                      detail.subtotal?.toCurrency() ?? "-",
                       textAlign: TextAlign.end,
                       style: Get.textTheme.headline6
                           ?.copyWith(color: Get.theme.primaryColor),
@@ -89,7 +90,12 @@ class TransaksiConfirmSheet extends StatelessWidget {
               const SizedBox(width: 16),
               Expanded(
                 child: Text(
-                  "${details.fold(0.0, (previousValue, element) => previousValue += element.subtotal ?? 0.0)}",
+                  details
+                      .fold(
+                          0.0,
+                          (previousValue, element) =>
+                              previousValue += element.subtotal ?? 0.0)
+                      .toCurrency(),
                   textAlign: TextAlign.end,
                   style: Get.textTheme.headline6?.copyWith(
                     color: Get.theme.primaryColor,

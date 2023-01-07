@@ -49,7 +49,8 @@ class RegisterController extends GetxController {
         EasyDialogHelper.showError(error);
       },
       (admin) {
-        Get.offAllNamed(RouteName.mainRoute);
+        EasyDialogHelper.showSuccess("Sukses membuat akun!");
+        Get.offAllNamed(RouteName.authRoute);
       },
     );
   }
