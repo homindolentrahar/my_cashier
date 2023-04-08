@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:my_cashier/features/menu/domain/model/menu.dart';
-import 'package:my_cashier/features/menu/presentation/application/menu_controller.dart';
+import 'package:my_cashier/features/menu/presentation/application/menu_item_controller.dart';
 import 'package:my_cashier/features/menu/presentation/widget/menu_list_item.dart';
 import 'package:my_cashier/route/route_name.dart';
 
@@ -11,7 +11,7 @@ class MenuScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<MenuController>(builder: (controller) {
+    return GetBuilder<MenuItemController>(builder: (controller) {
       return Column(
         children: [
           Row(
@@ -23,7 +23,7 @@ class MenuScreen extends StatelessWidget {
                 children: [
                   Text(
                     "Daftar Menu",
-                    style: Get.textTheme.bodyText1
+                    style: Get.textTheme.bodyLarge
                         ?.copyWith(fontWeight: FontWeight.w500),
                   ),
                 ],
@@ -47,7 +47,7 @@ class MenuScreen extends StatelessWidget {
                     const SizedBox(width: 4),
                     Text(
                       "Tambah",
-                      style: Get.textTheme.bodyText1?.copyWith(
+                      style: Get.textTheme.bodyLarge?.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.w500,
                       ),

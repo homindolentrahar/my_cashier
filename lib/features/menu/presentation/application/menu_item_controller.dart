@@ -4,10 +4,10 @@ import 'package:my_cashier/features/menu/domain/repository/i_menu_repository.dar
 import 'package:my_cashier/route/route_name.dart';
 import 'package:my_cashier/util/helper/easy_dialog_helper.dart';
 
-class MenuController extends GetxController {
+class MenuItemController extends GetxController {
   final IMenuRepository repository;
 
-  MenuController(this.repository);
+  MenuItemController(this.repository);
 
   @override
   void onInit() {
